@@ -7,21 +7,23 @@ import minusk.miner.world.World;
  */
 class Miner {
 	private static boolean looping = true;
-
+	
 	public static final World world = new World();
-
+	
 	public static void main(String[] args) {
 		Graphics.initialize();
-
+		
 		while (looping) {
+			world.update();
+			
 			Graphics.beginFrame();
-
+			
 			world.render();
-
+			
 			Graphics.endFrame();
 		}
 	}
-
+	
 	public static void endLoop() {
 		looping = false;
 	}

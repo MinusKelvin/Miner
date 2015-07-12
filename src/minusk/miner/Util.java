@@ -11,7 +11,7 @@ public class Util {
 	public static String read(InputStream input) {
 		BufferedInputStream in = new BufferedInputStream(input);
 		StringBuilder str = new StringBuilder();
-
+		
 		try {
 			int c;
 			while ((c = in.read()) != -1)
@@ -19,7 +19,7 @@ public class Util {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		
 		return str.toString();
 	}
 }
