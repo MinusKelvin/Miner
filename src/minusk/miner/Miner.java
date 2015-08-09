@@ -2,26 +2,35 @@ package minusk.miner;
 
 import minusk.miner.world.World;
 
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+
 /**
  * Created by MinusKelvin on 2015-07-11.
  */
-class Miner {
+public class Miner {
 	private static boolean looping = true;
 	
 	public static final World world = new World();
 	
 	public static void main(String[] args) {
 		Graphics.initialize();
+		world.init();
 		
 		while (looping) {
 			world.update();
 			
-			Graphics.beginFrame();
+			render();
 			
-			world.render();
-			
-			Graphics.endFrame();
+			glfwPollEvents();
 		}
+	}
+	
+	static void render() {
+		Graphics.beginFrame();
+		
+		world.render();
+		
+		Graphics.endFrame();
 	}
 	
 	public static void endLoop() {
