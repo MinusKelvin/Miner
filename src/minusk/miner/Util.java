@@ -22,4 +22,10 @@ public class Util {
 		
 		return str.toString();
 	}
+	
+	public static double average(double[] vals) {
+		double s = 0;
+		for (double v : vals) s += v;
+		return s / vals.length;
+	}
 }

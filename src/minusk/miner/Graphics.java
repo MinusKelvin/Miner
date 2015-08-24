@@ -8,9 +8,7 @@ import org.lwjgl.glfw.GLFWWindowRefreshCallback;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GLContext;
 
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
+import java.nio.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -19,6 +17,7 @@ import static org.lwjgl.opengl.GL12.glTexImage3D;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.stb.STBImage.stbi_image_free;
 import static org.lwjgl.stb.STBImage.stbi_load;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -176,7 +175,7 @@ public class Graphics {
 		
 		glfwMakeContextCurrent(window);
 		GLContext.createFromCurrent();
-//		glfwSwapInterval(0);
+		glfwSwapInterval(0);
 		
 		glfwSetWindowCloseCallback(window, persistWindowClose = GLFWWindowCloseCallback(Graphics::closeRequested));
 		glfwSetWindowSizeCallback(window, persistWindowSize = GLFWWindowSizeCallback(Graphics::windowSize));
@@ -237,11 +236,17 @@ public class Graphics {
 		IntBuffer data = BufferUtils.createIntBuffer(3);
 		ByteBuffer imageContents = stbi_load("res/tiles.png", ((IntBuffer) data.position(0)).slice(),
 				((IntBuffer) data.position(1)).slice(), ((IntBuffer) data.position(2)).slice(), 4);
+		System.out.println(data.get(2));
 		
 		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 128, 128, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageContents);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 0);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		
+		stbi_image_free(imageContents);
+		
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 	
 	static void windowSize(long window, int width, int height) {
@@ -273,6 +278,21 @@ public class Graphics {
 	
 	public static boolean keyPressed(int key) {
 		return glfwGetKey(window, key) == GLFW_PRESS;
+	}
+	
+	private static DoubleBuffer mpos = BufferUtils.createDoubleBuffer(2);
+	public static float getMouseX() {
+		glfwGetCursorPos(window, ((DoubleBuffer) mpos.position(0)).slice(), ((DoubleBuffer) mpos.position(1)).slice());
+		return (float)mpos.get(0);
+	}
+	
+	public static float getMouseY() {
+		glfwGetCursorPos(window, ((DoubleBuffer) mpos.position(0)).slice(), ((DoubleBuffer) mpos.position(1)).slice());
+		return (float)mpos.get(1);
+	}
+	
+	public static boolean mousePressed(int button) {
+		return glfwGetMouseButton(window, button) == GLFW_PRESS;
 	}
 	
 	private static final float[] TILE_TEXCOORD_X_LOOKUP = {

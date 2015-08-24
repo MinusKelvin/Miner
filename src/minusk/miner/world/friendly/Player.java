@@ -11,9 +11,15 @@ import static org.lwjgl.glfw.GLFW.*;
  * Created by MinusKelvin on 2015-07-12.
  */
 public class Player extends Entity {
+	private int jumpLength = 12;
+	private float acceleration = 0.03f;
+	private float jumpSpeed = 0.8f;
+	private float maxSpeed = 0.5f;
+	private float gravity = 0.08f;
+	
 	private Vector2f position = new Vector2f(-getWidth()/2,730-getHeight()/2);
 	private Vector2f velocity = new Vector2f();
-	private int jumpTimer = 15;
+	private int jumpTimer = jumpLength;
 	
 	@Override
 	public float getX() {
@@ -38,31 +44,32 @@ public class Player extends Entity {
 	@Override
 	protected void update() {
 		if (Graphics.keyPressed(GLFW_KEY_A))
-			velocity.x -= 0.1f;
+			velocity.x -= acceleration;
 		if (Graphics.keyPressed(GLFW_KEY_D))
-			velocity.x += 0.1f;
+			velocity.x += acceleration;
 		if (!(Graphics.keyPressed(GLFW_KEY_D) ^ Graphics.keyPressed(GLFW_KEY_A)))
 			velocity.x *= 0.7f;
 		
 		if (Graphics.keyPressed(GLFW_KEY_SPACE) && jumpTimer > 0) {
 			jumpTimer--;
-			velocity.y = 0.9f;
-		}
+			velocity.y = jumpSpeed;
+		} else
+			jumpTimer = 0;
 		
-		velocity.y -= 0.08f;
+		velocity.y -= gravity;
 		
 		if (velocity.y > 2)
 			velocity.y = 2;
 		else if (velocity.y < -2)
 			velocity.y = -2;
 		
-		if (velocity.x > 0.9f)
-			velocity.x = 0.9f;
-		else if (velocity.x < -0.9f)
-			velocity.x = -0.9f;
+		if (velocity.x > maxSpeed)
+			velocity.x = maxSpeed;
+		else if (velocity.x < -maxSpeed)
+			velocity.x = -maxSpeed;
 		
 		if (move(velocity, position)[Direction.Y_MINUS.id])
-			jumpTimer = 12;
+			jumpTimer = jumpLength;
 	}
 	
 	@Override

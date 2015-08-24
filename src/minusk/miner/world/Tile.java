@@ -8,17 +8,10 @@ import static minusk.miner.world.Direction.*;
  * Created by MinusKelvin on 2015-07-12.
  */
 public class Tile {
-	public final int x,y;
-	
 	int id = 0;
 	private int connected;
 	
-	public Tile(int x, int y) {
-		this.x = x;
-		this.y = y;
-	}
-	
-	public void calcConnected() {
+	public void calcConnected(int x, int y) {
 		if (id == 0)
 			return;
 		

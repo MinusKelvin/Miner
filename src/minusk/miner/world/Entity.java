@@ -60,7 +60,7 @@ public abstract class Entity {
 		float yDirection = Math.signum(velocity.y);
 		boolean[] collides = new boolean[4];
 		
-		for (xCycles = Math.abs(xCycles); xCycles >= 0 && leftoverX != 0; xCycles--) {
+		for (xCycles = Math.abs(xCycles); xCycles >= 0; xCycles--) {
 			position.x += xCycles == 0 ? leftoverX : xDirection;
 			if (intersects(position.x,position.y)) {
 				if (xDirection == 1) {
@@ -77,7 +77,7 @@ public abstract class Entity {
 			}
 		}
 		
-		for (yCycles = Math.abs(yCycles); yCycles >= 0 && leftoverY != 0; yCycles--) {
+		for (yCycles = Math.abs(yCycles); yCycles >= 0; yCycles--) {
 			position.y += yCycles == 0 ? leftoverY : yDirection;
 			if (intersects(position.x,position.y)) {
 				if (yDirection == 1) {
